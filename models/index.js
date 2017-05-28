@@ -1,8 +1,5 @@
 var Sequelize = require('sequelize');
 
-var sequelize = new Sequelize('postgres://AllieG@localhost:5432/racr');
-
-
 if (process.env.DATABSE_URL) {
 	sequelize = new Sequelize(process.env.DATABSE_URL, {
 		dialect: 'postgres',
@@ -16,9 +13,10 @@ if (process.env.DATABSE_URL) {
 module.exports.Sequelize = Sequelize;
 module.exports.sequelize = sequelize;
 
+var Checkpoints = sequelize.import('./checkpoint.js');
 
-// a RACR has one or many races
-// race has one or many checkpoints
-// checkpoints have 
+module.exports.models = {
+	Checkpoints: Checkpoints
+};
 
-Checkpoints.belongsTo(races);
+
