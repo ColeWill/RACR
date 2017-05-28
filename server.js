@@ -1,14 +1,15 @@
 var express = require('express');
 var app = express();
 var router = express.Router();
-// var racrRouter = require('./config/backEndRoutes.js');
+var racrRouter = require('./config/backEndRoutes.js');
 var bodyParser = require('body-parser');
+
 
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
-// app.use(racrRouter);
+app.use(racrRouter);
 
 app.use(express.static('public'));
 

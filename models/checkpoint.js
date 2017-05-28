@@ -9,6 +9,7 @@ module.exports = function(sequelize,Sequelize){
 	img_url: Sequelize.STRING,
 	racrID: Sequelize.STRING,
 	raceID: Sequelize.STRING
+	
 });
 	return Checkpoints;
 };
