@@ -17,6 +17,13 @@ app.get('/', function(req,res){
 	res.sendFile(__dirname + '/public/index.html');
 });
 
+// router.get('api/checkpoints', function INDEX(req,res){
+// 	// Checkpoints.findAll.then(function(ckp){
+// 	// 	res.json(ckp);
+// 	// });
+// 	console.log('hey now');
+// });
+
 app.listen(process.env.PORT || 3000, function(){
 	console.log('RACR serving on localhost:3000');
 });
