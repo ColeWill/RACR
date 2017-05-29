@@ -1,1 +1,1 @@
-function ChecksController(o){console.log("Chcekadsf")}angular.module("appRACR",[]).controller("ChecksController",ChecksController),ChecksController.$inject=["$http"];
+function ChecksIndexController(o,e,n){!function(){o.get("/checkpoints").then(function(o){n.checkpoints=o.data,console.log("got the checkpoints: "),console.log(n.checkpoints)})}()}angular.module("appRACR",[]).controller("ChecksIndexController",ChecksIndexController),ChecksIndexController.$inject=["$http","$location","$scope"];
