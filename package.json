@@ -17,6 +17,7 @@
     "gulp-uglify": "^3.0.0"
   },
   "dependencies": {
+    "angular-route": "^1.6.4",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.17.1",
     "dotenv": "^4.0.0",
