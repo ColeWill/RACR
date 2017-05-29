@@ -15,4 +15,5 @@ function ChecksIndexController($http,$location,$scope){
 		});
 	}
 	getAllChecks();
+	
 }

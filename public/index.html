@@ -13,7 +13,7 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-}</style><div ng-controller="ChecksIndexController as checkController">{{checkController.checkpoints}}</div><div id="map"></div><script>var map;
+}</style><div ng-controller="ChecksIndexController">{{checkpoints}}</div><div id="map"></div><script>var map;
 function initMap() {
 	var uluru = {lat:-25.363, lng:131.044}; 
   	map = new google.maps.Map(document.getElementById('map'), {
