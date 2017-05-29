@@ -1,0 +1,1 @@
+function ChecksController(o){console.log("Chcekadsf")}angular.module("appRACR",[]).controller("ChecksController",ChecksController),ChecksController.$inject=["$http"];
