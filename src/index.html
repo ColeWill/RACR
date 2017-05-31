@@ -73,7 +73,8 @@ var map, infoWindow;
 var pinLat;
 var pinLng;
 
-var checkPoints = [];  // checkpoints of dropped pins get dropped in here...
+// table in lounge hardcoded for testing purposes
+var checkPoints = [{lat:39.758263299999996, lng:-105.00746409999999},{lat:39.7581135,lng:-105.00743779999999}];  // checkpoints of dropped pins get dropped in here...
 
 function initMap() {
     	var weWork = {
@@ -96,15 +97,16 @@ function initMap() {
     		checkPoints.push(newCheckpoint);
     		console.log('pinLat: ' + pinLat);
     		console.log('pinLng: ' + pinLng);
-    		var marker = new google.maps.Marker({
-    			position: {
-    				lat: pinLat,
-    				lng: pinLng
-    			},
+    		for (var i = checkPoints.length - 1; i >= 0; i--) {
+    		 
+    		 var marker = new google.maps.Marker({
+    			position: checkPoints[i],
     			map: map,
     			draggable: true,
     			animation: google.maps.Animation.DROP
     		});
+    		}
+    		
     		
     	});
     	
@@ -150,6 +152,9 @@ locate.addEventListener('click', function(){
     	lng: -105.0073735
     };
 
+    
+    
+
     //for each through array of all points
     // check to see if im at one of them
     // if I am remove it from the map 
@@ -163,7 +168,7 @@ locate.addEventListener('click', function(){
 
     	 	var stop = document.getElementById('stop');
     		stop.addEventListener('click', function(){
-
+    			clearInterval(positionChecker);
     		});
     	
 
@@ -179,27 +184,49 @@ locate.addEventListener('click', function(){
     			console.log("pos:");
     			console.log("moving lat + lng: " + pos.lat + " " + pos.lng);
 
+    			for (var i = 0; i < checkPoints.length; i++) {
+	    				// Find difference between my coordinates and checkpoints
+	    			var latDiff = Math.abs(pos.lat - checkPoints[i].lat);
+	    			var lngDiff = Math.abs(pos.lng - checkPoints[i].lng);
+	    			
+	    			// IN RANGE CLEARED YOUR PIN
+	    			if ((latDiff <= .00001) || (lngDiff <= .00001)) {
 
-    			// Find difference between my coordinates and checkpoints
-    			var latDiff = Math.abs(pos.lat - pinLat);
-    			var lngDiff = Math.abs(pos.lng - pinLng);
-    			
-    			// drops a pin if not in range 
-    			if ((latDiff >= .0001) || (lngDiff >= .0001)) {
-    				// var countUp;
-    				// countUp ++;
-    				infoWindow.setPosition(pos); //drops new infoWindow
-    				infoWindow.setContent('you were here'); //words inside
-    				infoWindow.open(map);
-    				map.setCenter(pos); // re-centers the map
-    			} else {
-    				alert('you made it');
-    				clearInterval(positionChecker);
-    				alert('you made it!');
-    				/// how do I stop this?
+	    				infoWindow.setPosition(pos); //drops new infoWindow
+	    				infoWindow.setContent('CLEARED!'); //words inside
+	    				infoWindow.open(map);
+	    				map.setCenter(pos); // re-centers the map
+	    				console.log('popping put point');
+	    				console.log(checkPoints[i]);
+	    				// checkPoints[i].setMap(null);
+	    				checkPoints.splice(i, 1);
+
+	    				//remove that marker from map
+
+	    			} 
+	    			///  NOT IN RANGE ///
+	    			if ((latDiff >= .00001) || (lngDiff >= .00001)) {
+	    				// // var countUp;
+	    				// // countUp ++;
+	    				// infoWindow.setPosition(pos); //drops new infoWindow
+	    				// infoWindow.setContent('you were here'); //words inside
+	    				// infoWindow.open(map);
+	    				// map.setCenter(pos); // re-centers the map
+	    			}if(checkPoints.length == 0){
+	    				
+	    				clearInterval(positionChecker);
+	    				alert('you made it');
+	    			// } else {
+	    			// 	alert('you made it');
+	    			// 	clearInterval(positionChecker);
+	    			// 	alert('you made it!');
+	    				/// how do I stop this?
+	    			}
     			}
+    			// / END: FOR LOOP ///
+    			
     		});
-    	}, 5000); // check every 5 seconds
+    	}, 1000); // check every 5 seconds
     });
     //if geolocation is within a certain range of target location, trigger an alert.
     // if geolocation is
