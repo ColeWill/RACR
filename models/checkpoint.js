@@ -4,9 +4,6 @@ module.exports = function(sequelize,Sequelize){
 	
 	latitude: Sequelize.STRING,
 	longitude: Sequelize.STRING,
-	isStart: Sequelize.STRING,
-	isFinish: Sequelize.STRING,
-	img_url: Sequelize.STRING,
 	racrID: Sequelize.STRING,
 	raceID: Sequelize.STRING
 	

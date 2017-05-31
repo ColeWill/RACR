@@ -1,0 +1,1 @@
+function ChecksController(o){console.log("inside the controller...")}console.log("/js/controllers/checksController.js"),angular.module("RCR",[]).controller("ChecksController",ChecksController),ChecksController.$inject=["$http"];

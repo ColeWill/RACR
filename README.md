@@ -1,3 +1,10 @@
+
+
+# RCR
+
+
+
+
 write a function to geolocate (update user location) every certain number of seconds
 
 try check to see if current lat long = destination lat long
@@ -17,6 +24,11 @@ Day 3 Sunday --  finished backend and hooked up angularjs started working with g
 
 Day 4 Monday -- discovered that Google forbids maps users from using their apis for realtime directions
 
+Day 5 Tuesday -- f&$%... i finally got functionality working after 12hrs
+
+Day 6 - wedsneday -- S&*^T f&$% S&*^T,  for some stupid reason google maps won't work unless their script tag is in the bottom of my index.html, with my api key in it... AND none of my scripts work unless they are on THE SAME PAGE as the google maps link. 
+
+-App checks current location against location of dropped pins, if you get within ~5m? (accuracy of gps over wifi is questionable...) of a pin you clear it with a amarker.  When you clear ALL pins you win! and the app stops.
 
 www.mapbox.com
 

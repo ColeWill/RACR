@@ -3,7 +3,7 @@
 <head>
   <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
-	<title>Racr</title>
+	<title>RCR</title>
 	<link rel="stylesheet" href="./css/styles.css">
 	
 	<!-- jQuery for Bootstrap -->
@@ -25,7 +25,7 @@
 	<script src="/bower_components/angular-route/angular-route.min.js"></script>
 	<!-- client side js -->
 	<!-- frontEnd controllers -->
-	<script src="/js/controllers/mapsControllers.js"></script>
+	<script src="/js/controllers/checksControllers.js"></script>
 <!-- jQuery -->
 	<script
   src="https://code.jquery.com/jquery-3.2.1.min.js"
@@ -49,32 +49,43 @@
 	
 </head>
 
+<script src="js/client.js"></script>
+<body ng-app="RCR">
 
-<body ng-app="appRACR">
-	<script src="js/client.js"></script>
+<!-- all JavaScript HAS to be in the same window as the maps tag at the bottom which also has my api key... because google -->
+	
 
 
 <!-- GOOGLE MAPS -->
 
-
-<div ng-controller="ChecksIndexController">
-	{{checkpoints}}
+<h1>RCR</h1>
+<div>
+	{{checkpoints}} {{4*100}}
 </div>
+
 
 <button id="start">START</button>
 <button id="locate">locate</button>
 <button id="stop">Stop</button>
+<div >
+<button id="save">SaveCheckpoints</button>
+<button id ="delete">Delete</button>
+</div>
 
 <div id="map"></div>
 
+
 <script>
-console.log('client.js connected');
+
 var map, infoWindow;
 var pinLat;
 var pinLng;
 
-// table in lounge hardcoded for testing purposes
-var checkPoints = [{lat:39.758263299999996, lng:-105.00746409999999},{lat:39.7581135,lng:-105.00743779999999}];  // checkpoints of dropped pins get dropped in here...
+// table in lounge and corner of hardware hackathon room hardcoded for testing purposes
+var checkPoints = [];
+
+// [{lat:39.758263299999996, lng:-105.00746409999999},{lat:39.7581135,lng:-105.00743779999999}];  
+// checkpoints of dropped pins get dropped in here...
 
 function initMap() {
     	var weWork = {
@@ -85,7 +96,7 @@ function initMap() {
     		center: weWork,
     		zoom: 16
     	});
-    	/////////////////////////////Add Marker   /////////////////////////////////
+    	///////////////////////////// ADD MARKER  
     	google.maps.event.addListener(map, 'click', function(event) {
     		pinLat = event.latLng.lat();
     		pinLng = event.latLng.lng();
@@ -93,17 +104,18 @@ function initMap() {
     			lat: pinLat,
     			lng: pinLng
     		};
-
+    	//////////////////////////// RENDER ALL MARKERS
     		checkPoints.push(newCheckpoint);
     		console.log('pinLat: ' + pinLat);
     		console.log('pinLng: ' + pinLng);
+
     		for (var i = checkPoints.length - 1; i >= 0; i--) {
     		 
     		 var marker = new google.maps.Marker({
     			position: checkPoints[i],
     			map: map,
     			draggable: true,
-    			animation: google.maps.Animation.DROP
+    			// animation: google.maps.Animation.DROP
     		});
     		}
     		
@@ -168,6 +180,7 @@ locate.addEventListener('click', function(){
 
     	 	var stop = document.getElementById('stop');
     		stop.addEventListener('click', function(){
+                console.log('STOPPED...');
     			clearInterval(positionChecker);
     		});
     	
@@ -188,23 +201,25 @@ locate.addEventListener('click', function(){
 	    				// Find difference between my coordinates and checkpoints
 	    			var latDiff = Math.abs(pos.lat - checkPoints[i].lat);
 	    			var lngDiff = Math.abs(pos.lng - checkPoints[i].lng);
-	    			
+	    			// .00001 = set to within 1 meter???
 	    			// IN RANGE CLEARED YOUR PIN
 	    			if ((latDiff <= .00001) || (lngDiff <= .00001)) {
 
+
 	    				infoWindow.setPosition(pos); //drops new infoWindow
-	    				infoWindow.setContent('CLEARED!'); //words inside
+	    				infoWindow.setContent('CLEARED! '+checkPoints.length+': checkPoints Remaining'); //words inside
 	    				infoWindow.open(map);
 	    				map.setCenter(pos); // re-centers the map
 	    				console.log('popping put point');
 	    				console.log(checkPoints[i]);
 	    				// checkPoints[i].setMap(null);
 	    				checkPoints.splice(i, 1);
+                        console.log(checkPoints.length+' checkPoints Remaining');
 
 	    				//remove that marker from map
 
 	    			} 
-	    			///  NOT IN RANGE ///
+	    			///  NOT IN RANGE /// 
 	    			if ((latDiff >= .00001) || (lngDiff >= .00001)) {
 	    				// // var countUp;
 	    				// // countUp ++;
@@ -215,23 +230,20 @@ locate.addEventListener('click', function(){
 	    			}if(checkPoints.length == 0){
 	    				
 	    				clearInterval(positionChecker);
-	    				alert('you made it');
-	    			// } else {
-	    			// 	alert('you made it');
-	    			// 	clearInterval(positionChecker);
-	    			// 	alert('you made it!');
-	    				/// how do I stop this?
+	    				alert('you made it!');
+	    			
 	    			}
     			}
-    			// / END: FOR LOOP ///
+    			// / END: FOR LOOP LOCATION CHECKER ///
     			
     		});
-    	}, 1000); // check every 5 seconds
+    	}, 5000); // check every 5 seconds
     });
-    //if geolocation is within a certain range of target location, trigger an alert.
-    // if geolocation is
+  
     </script>
- <!-- -->
+ <ng-view><ng-view>
+
+
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD6495sIYm_IQgaRCt-74WeCayTkO0XvVo&callback=initMap" defer></script>
 
 </body>
