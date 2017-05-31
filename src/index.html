@@ -24,58 +24,188 @@
 	<!-- angular Router -->
 	<script src="/bower_components/angular-route/angular-route.min.js"></script>
 	<!-- client side js -->
-	<script src="/js/client.js"></script>
 	<!-- frontEnd controllers -->
 	<script src="/js/controllers/mapsControllers.js"></script>
+<!-- jQuery -->
+	<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+	<style>
+	/* Always set the map height explicitly to define the size of the div
+	 * element that contains the map. */
+	#map {
+		max-width: 600px;
+		max-height:600px;
+	  height: 100%;
+	}
+	/* Optional: Makes the sample page fill the window. */
+	html, body {
+	  height: 100%;
+	  margin: 0;
+	  padding: 0;
+	}
+	</style>
+	
 </head>
+
+
 <body ng-app="appRACR">
+	<script src="js/client.js"></script>
 
-<h1>Racr</h1>
-<h3>something else</h3>
-<h5>if 4 on right angular twerkin = {{2+2}}</h5>
 
-<style>
-/* Always set the map height explicitly to define the size of the div
- * element that contains the map. */
-#map {
-	max-width: 300px;
-	max-height:300px;
-  height: 100%;
-}
-/* Optional: Makes the sample page fill the window. */
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-</style>
+<!-- GOOGLE MAPS -->
+
 
 <div ng-controller="ChecksIndexController">
 	{{checkpoints}}
 </div>
 
- <div id="map"></div>
-    <script>
-    var map;
+<button id="start">START</button>
+<button id="locate">locate</button>
+<button id="stop">Stop</button>
+
+<div id="map"></div>
+
+<script>
+console.log('client.js connected');
+var map, infoWindow;
+var pinLat;
+var pinLng;
+
+var checkPoints = [];  // checkpoints of dropped pins get dropped in here...
+
 function initMap() {
-	var uluru = {lat:-25.363, lng:131.044}; 
-  	map = new google.maps.Map(document.getElementById('map'), {
-    center: uluru,
-    zoom: 4
-  });
-  	var marker = new google.maps.Marker({
-  		position:uluru,
-  		map:map
-  	});	
-}
+    	var weWork = {
+    		lat: 39.758416,
+    		lng: -105.007525
+    	};
+    	map = new google.maps.Map(document.getElementById('map'), {
+    		center: weWork,
+    		zoom: 16
+    	});
+    	/////////////////////////////Add Marker   /////////////////////////////////
+    	google.maps.event.addListener(map, 'click', function(event) {
+    		pinLat = event.latLng.lat();
+    		pinLng = event.latLng.lng();
+    		var newCheckpoint = {
+    			lat: pinLat,
+    			lng: pinLng
+    		};
+
+    		checkPoints.push(newCheckpoint);
+    		console.log('pinLat: ' + pinLat);
+    		console.log('pinLng: ' + pinLng);
+    		var marker = new google.maps.Marker({
+    			position: {
+    				lat: pinLat,
+    				lng: pinLng
+    			},
+    			map: map,
+    			draggable: true,
+    			animation: google.maps.Animation.DROP
+    		});
+    		
+    	});
+    	
+    }
+//end of init map
+
+// Click finds your Location
+locate = document.getElementById('locate');
+locate.addEventListener('click', function(){
+
+
+    	infoWindow = new google.maps.InfoWindow;
+    	if (navigator.geolocation) {
+    		navigator.geolocation.getCurrentPosition(function(position) {
+    			var pos = {
+    				lat: position.coords.latitude,
+    				lng: position.coords.longitude
+    			};
+    			console.log("pos:");
+    			console.log("your lat: " + pos.lat);
+    			console.log("your lng: " + pos.lng);
+    			infoWindow.setPosition(pos);
+    			infoWindow.setContent('Starting Point');
+    			infoWindow.open(map);
+    			map.setCenter(pos);
+    		}, function() {
+    			handleLocationError(true, infoWindow, map.getCenter());
+    		});
+    	} else {
+    		handleLocationError(false, infoWindow, map.GetCenter());
+    	}
+});
+//////////// end of click location
+
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+    	infoWindow.setPostion(pos);
+    	infoWindow.setContent(browserHasGeolocation ? 'Error: geolocation service failure' : 'Your Browser does not support geolocation');
+    	infoWindow.open(map);
+    }
+    // conference room 3c north end of table facing south
+    var destination = {
+    	lat: 39.758091,
+    	lng: -105.0073735
+    };
+
+    //for each through array of all points
+    // check to see if im at one of them
+    // if I am remove it from the map 
+
+
+
+    /////////////////////    Geolocation 
+    var start = document.getElementById('start');
+    start.addEventListener('click', function() {
+    	console.log('start running');
+
+    	 	var stop = document.getElementById('stop');
+    		stop.addEventListener('click', function(){
+
+    		});
+    	
+
+    	var positionChecker = window.setInterval(function() {
+    		var myPos = navigator.geolocation;
+    		infoWindow = new google.maps.InfoWindow;
+    		// var location = navigator.geolocation;
+    		myPos.getCurrentPosition(function(position) {
+    			var pos = {
+    				lat: position.coords.latitude,
+    				lng: position.coords.longitude
+    			};
+    			console.log("pos:");
+    			console.log("moving lat + lng: " + pos.lat + " " + pos.lng);
+
+
+    			// Find difference between my coordinates and checkpoints
+    			var latDiff = Math.abs(pos.lat - pinLat);
+    			var lngDiff = Math.abs(pos.lng - pinLng);
+    			
+    			// drops a pin if not in range 
+    			if ((latDiff >= .0001) || (lngDiff >= .0001)) {
+    				// var countUp;
+    				// countUp ++;
+    				infoWindow.setPosition(pos); //drops new infoWindow
+    				infoWindow.setContent('you were here'); //words inside
+    				infoWindow.open(map);
+    				map.setCenter(pos); // re-centers the map
+    			} else {
+    				alert('you made it');
+    				clearInterval(positionChecker);
+    				alert('you made it!');
+    				/// how do I stop this?
+    			}
+    		});
+    	}, 5000); // check every 5 seconds
+    });
+    //if geolocation is within a certain range of target location, trigger an alert.
+    // if geolocation is
     </script>
-    
-<!-- Replace the value of the key parameter with your own API key. -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD6495sIYm_IQgaRCt-74WeCayTkO0XvVo&callback=initMap" async defer></script>
-
-    
-
-
+ <!-- -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD6495sIYm_IQgaRCt-74WeCayTkO0XvVo&callback=initMap" defer></script>
 
 </body>
 </html>
