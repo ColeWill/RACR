@@ -1,50 +1,49 @@
 
-
-var DB = require('../models').models;
-
 console.log('seed twerking');
+var DB = require("../models").models;
+// pulls in Races + Checkpoints models...
 
-var samplePointsArray = [
-	{
-		latitude: 44,
-		longitude: -33,
-		
-		racrID: null,
-		raceID: null
-	},
-	{
-		latitude: "39.738467",
-		longitude: "-104.99026",
-		racrID: null,
-		raceID: null
-		
-	},
-	{
-		latitude: "39.697186",
-		longitude: "-105.035615",
-		racrID: null,
-		raceID: null
-	},
-	{
-		latitude: "39.762261",
-		longitude: "-105.006422",
-		racrID: null,
-		raceID: null
-	},
-	{
-		latitude: "39.751634",
-		longitude: "-105.003005",
-		racrID: null,
-		raceID: null
-	}
-	
+var checkPointsArray = [
+	{lat:'39.6169795',lng:'-105.01706759999999'},
+	{lat:'39.61686088457503',lng:'-105.01788139343262'},
+	{lat:'39.6168939433567',lng:'-105.0161862373352'}
 ];
 
-function pointsCreate(){
-	return DB.Checkpoints.bulkCreate(samplePointsArray);
-}
 
-pointsCreate()
-	.then(function(){
-		process.exit();
-	});
+// var raceCreate = function() {
+// 	return DB.Races.create({
+//     name: 'Ricky Bobby'
+// 	}).then(function(race) {
+// 		artistCreate(manager.id);
+// 		adCreate(manager.id);
+// 	});
+// };
+
+var raceCreate = function() {
+	return DB.Races.create({
+    
+    name: 'Trail of Tears'
+    
+  	}).then(function(race) {
+  		console.log('race: '+race);
+  		checkPointsArray.forEach(function(ckp, i) {
+  		console.log(checkPointsArray[i]);
+  		ckp.raceId = race.id;
+  	})
+  	DB.Checkpoints.bulkCreate(checkPointsArray);
+  	console.log('ckps added');
+  });
+};
+
+
+
+// var pointsCreate = function() {
+// 	return DB.Checkpoints.create({
+// 	    lat:'39.6169795',lng:'-105.01706759999999',
+// 	});
+// };
+
+raceCreate()
+.then(function() {
+	process.exit();
+});

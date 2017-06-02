@@ -7,16 +7,22 @@ if (process.env.DATABSE_URL) {
 		logging: true 
 	}) 
 } else {
-	var sequelize = new Sequelize('postgres://AllieG@localhost:5432/racr');
+	var sequelize = new Sequelize('postgres://AllieG@localhost:5432/rcr');
 } 
 
 module.exports.Sequelize = Sequelize;
 module.exports.sequelize = sequelize;
 
 var Checkpoints = sequelize.import('./checkpoint.js');
+var Races = sequelize.import('./race.js');
+
+
+Checkpoints.belongsTo(Races);
+Races.hasMany(Checkpoints, { foreignKey: 'raceId' , foreignKeyConstraint:true });
 
 module.exports.models = {
-	Checkpoints: Checkpoints
+	Checkpoints: Checkpoints,
+	Races: Races
 };
 
 
